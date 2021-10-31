@@ -1,10 +1,10 @@
 #pragma once
 #include "Creature.h"
 
-void basicSimulation(Creature model, int population, int time);
+void basicSimulation(Creature model, int *population, int time);
 
-int deathChanceCalulator(int population, Creature model);
+void deathChanceCalulator(int* population, Creature model, int tempPop);
 
-int replicationChanceCalulator(int population, Creature model);
+void replicationChanceCalulator(int* population, Creature model, int tempPop);
 
-void saveCoords(int time, int population);
+void saveCoords(int time, int *population);
