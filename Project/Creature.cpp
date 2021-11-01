@@ -5,14 +5,21 @@
 
 std::mt19937 rng(std::time(NULL));
 
-Creature::Creature(int sbr, double rc, double dc) {
+// Constructor
+Creature::Creature(int sbr, double rc, double dc, double sbrc, double mc) {
 	spontaneousBirthRate = sbr;
 	replicationChance = rc;
 	deathChance = dc;
+	spontaneousBirthRateChance = sbrc;
+	mutationChance = mc;
 }
 	
 int Creature::getSpontaneousBirthRate() {
 	return spontaneousBirthRate;
+}
+
+double Creature::getSpontaneousBirthRateChance() {
+	return spontaneousBirthRateChance;
 }
 
 double Creature::getReplicationChance() {
