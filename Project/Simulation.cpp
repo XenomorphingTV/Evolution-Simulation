@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
-#include <fstream>
 
 void basicSimulation(Creature model, int *population, int time) {
 	// Remove previously created file, becuase we always append to it
