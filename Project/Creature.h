@@ -1,4 +1,10 @@
 #pragma once
+#include <vector>
+
+// Max and min value that the mutation can do
+constexpr double MINMUTATION = 0.01;
+constexpr double MAXMUTATION = 0.20;
+
 class Creature {
 private:
 	int spontaneousBirthRate;
@@ -7,12 +13,16 @@ private:
 	double spontaneousBirthRateChance;
 	double mutationChance;
 
+
 public:
-	Creature(int sbr, double rc, double dc, double sbrc, double mc);
+	int population{ 0 };
+	Creature(int sbr, double rc, double dc, double sbrc, double mc, int sp);
 	int getSpontaneousBirthRate();
 	double getReplicationChance();
 	double getDeathChance();
 	double getSpontaneousBirthRateChance();
 	bool randomPercentCheck(double percentage);
-
+	double maxMutateDouble(double fMin, double fMax);
+	void mutateCreature(std::vector<Creature> *creatureList);
+	double pushNewMutation(double chance);
 };
