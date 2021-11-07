@@ -14,7 +14,7 @@ int main()
 	srand(std::time(NULL));
 	int time{ 10 };
 	std::vector<Creature> allCreatures;
-	Creature model1(1, 0, 0.2, 1, 0, 0);
+	Creature model1(1, 0, 0.2, 1, 0, 1);
 	Creature model2(1, 0, 0.2, 1, 0, 0);
 	allCreatures.push_back(model1);
 	allCreatures.push_back(model2);

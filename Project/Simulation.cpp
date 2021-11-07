@@ -59,11 +59,11 @@ void spontaneousBirthChanceCalulator(int* population, Creature model, int tempPo
 }
 
 void saveCoords(int time, int* population) {
-	std::ofstream MyFile;
-	MyFile.open("GraphPlots.csv", std::ios_base::app);
+	std::ofstream myFile;
+	myFile.open("GraphPlots.csv", std::ios_base::app);
 
 	// The required template for cvs files
-	MyFile << time << "," << *population << "\n";
+	myFile << time << "," << *population << "\n";
 }
 
 //--------------------------//
@@ -80,18 +80,30 @@ void simulationV2(std::vector<Creature> *allCreatures, int time) {
 	saveCoordsV2(time, &tableHeader, (allCreatures->size() - 1), allCreatures);
 }
 
-void saveCoordsV2(int time, bool *header, int size, std::vector<Creature>* allCreatures) {
-	std::ofstream MyFile;
-	// Fix this
-	if((MyFile.open("GraphPlotsNoHeader.csv"))
-	MyFile.open("GraphPlotsNoHeader.csv", std::ios_base::app);
-	MyFile << "Header\n";
-	MyFile.close();
 
+// New method of saving data, making it in an aranged table, and replacing the headers
+void saveCoordsV2(int time, bool *header, int size, std::vector<Creature>* allCreatures) {
+	std::ifstream checkFile;
+	std::ofstream myFile;
+	
+	// Opening file to check if it exists
+	checkFile.open("GraphPlotsNoHeader.csv");
+	
+	// If it doesn't, create it with a "Header" placeholder
+	if(!checkFile) {
+		myFile.open("GraphPlotsNoHeader.csv", std::ios_base::app);
+			myFile << "Header\n";
+			myFile.close();
+	}
+	checkFile.close();
+
+	// Checking if we need to add the headers, they are done last so that all mutations are added at the end
 	if (*header) {
-		std::ifstream filein("GraphPlotsNoHeader.csv"); //File to read from
-		std::ofstream fileout("GraphPlots.csv"); //Temporary file
-		if (!filein || !fileout)
+		// File to read from, before headers are added
+		std::ifstream fileIn("GraphPlotsNoHeader.csv");
+		// Output file, since we need to copy all data after adding headers
+		std::ofstream fileOut("GraphPlots.csv");
+		if (!fileIn || !fileOut)
 		{
 			std::cout << "Error opening files!\n";
 			exit(1);
@@ -99,29 +111,40 @@ void saveCoordsV2(int time, bool *header, int size, std::vector<Creature>* allCr
 
 		std::string strTemp;
 		std::string replace{ "" };
-		while (getline(filein, strTemp))
+
+		// Getting the lines from our file
+		while (getline(fileIn, strTemp))
 		{
+			// If "Header" placeholder is found, replace it with population and then number of total species
 			if (strTemp == "Header") {
 				for (int i = 0; i <= size; i++) {
 					replace += "Time,Population " + std::to_string(i) + ",";
 				}
 				replace += "\n";
-				fileout << replace;
+				fileOut << replace;
 			}
+
+			// The rest is just coppied
 			else {
-				fileout << strTemp;
+				fileOut << strTemp;
 			}
 		}
+
+		// Let out function know the header is set
 		*header = false;
-		filein.close();
-		fileout.close();
+		fileIn.close();
+		fileOut.close();
+
+		// Delete the temp file
 		std::remove("GraphPlotsNoHeader.csv");
 	}
+
+	// If its not yet time to add headers, just save the data
 	else {
-		MyFile.open("GraphPlotsNoHeader.csv", std::ios_base::app);
+		myFile.open("GraphPlotsNoHeader.csv", std::ios_base::app);
 		for (int i = 0; i <= size; i++) {
-			MyFile << time << "," << (allCreatures->at(i)).population << ",";
+			myFile << time << "," << (allCreatures->at(i)).population << ",";
 		}
-		MyFile << "\n";
+		myFile << "\n";
 	}
 }
