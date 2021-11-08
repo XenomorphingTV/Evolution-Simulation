@@ -12,16 +12,16 @@ int main()
 
 	// Create a random seed for our randomization
 	srand(std::time(NULL));
-	int time{ 10 };
+	int time{ 300 };
 	std::vector<Creature> allCreatures;
-	Creature model1(1, 0, 0.2, 1, 0, 1);
+	Creature model1(1, 0, 0.2, 1, 0.01, 1);
 	Creature model2(1, 0, 0.2, 1, 0, 0);
 	allCreatures.push_back(model1);
 	allCreatures.push_back(model2);
 
 	//basicSimulation(model1, &population, time);
 	simulationV2(&allCreatures, time);
-	printf("Time taken: %.2fs\n", (double)(clock() - tStart) / CLOCKS_PER_SEC);
+	printf("Time taken: %.2fs\n", (double)(clock() - (uint16_t)tStart) / CLOCKS_PER_SEC);
 
 	std::cout << "Press Enter to Continue";
 	std::cin.ignore();

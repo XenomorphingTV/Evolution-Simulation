@@ -47,40 +47,66 @@ double Creature::maxMutateDouble(double fMin, double fMax){
 
 void Creature::mutateCreature(std::vector<Creature> *creatureList){
 	if (randomPercentCheck(mutationChance)) {
-		switch (rand() % 4) {
-		case 0:
-		{
-			Creature mutated0(spontaneousBirthRate, replicationChance, deathChance, pushNewMutation(spontaneousBirthRateChance), mutationChance, 1);
-			creatureList->push_back(mutated0);
-		}
-			break;
-		case 1:
-		{
-			Creature mutated1(spontaneousBirthRate, pushNewMutation(replicationChance), deathChance, spontaneousBirthRateChance, mutationChance, 1);
-			creatureList->push_back(mutated1);
-		}
-			break;
-		case 2:
-		{
-			Creature mutated2(spontaneousBirthRate, replicationChance, pushNewMutation(deathChance), spontaneousBirthRateChance, mutationChance, 1);
-			creatureList->push_back(mutated2);
-		}
-			break;
-		case 3:
-		{
-			Creature mutated3(spontaneousBirthRate, replicationChance, deathChance, spontaneousBirthRateChance, pushNewMutation(mutationChance), 1);
-			creatureList->push_back(mutated3);
-		}
-			break;
-		}
+		// Use this to randomize which value to change
+		int temp{ rand() % 3 };
+		pushMutate(creatureList, temp);
 	}
 }
 
-double Creature::pushNewMutation(double chance) {
+
+double Creature::mutationPosOrNeg(double chance, double minMut, double maxMut) {
 	if (rand() % 2) {
-		return (chance + maxMutateDouble(MINMUTATION, MAXMUTATION));
+		return (chance + maxMutateDouble(minMut, maxMut));
 	}
 	else {
-		return (chance - maxMutateDouble(MINMUTATION, MAXMUTATION));
+		return (chance - maxMutateDouble(minMut, maxMut));
 	}
+}
+
+void Creature::pushMutate(std::vector<Creature>* creatureList, int valueToChange) {
+	double rc{ replicationChance };
+	double dc{ deathChance };
+	double sbrc{ spontaneousBirthRateChance };
+	double mc{ mutationChance };
+	switch (valueToChange) {
+	case 0:
+		rc = mutationPosOrNeg(rc, MINMUTATION, MAXMUTATION);
+		if (rc < 0) {
+			rc = 0;
+		}
+		else if (rc > 1) {
+			rc = 1;
+		}
+		break;
+	case 1:
+		dc = mutationPosOrNeg(dc, MINMUTATION, MAXMUTATION);
+		if (dc < 0) {
+			dc = 0;
+		}
+		else if(dc > 1) {
+			dc = 1;
+		}
+		break;
+	case 2:
+		sbrc = mutationPosOrNeg(sbrc, MINMUTATION, MAXMUTATION);
+		if (sbrc < 0) {
+			sbrc = 0;
+		}
+		else if (sbrc > 1) {
+			sbrc = 1;
+		}
+		break;
+	/*case 3:
+		mc = mutationPosOrNeg(mutationChance, 0.00, 0.02);
+		if (mc < 0) {
+			mc = 0;
+		}
+		else if (mc > 1) {
+			mc = 1;
+		}
+		break;*/
+	}
+
+	Creature mutated(spontaneousBirthRate, rc, dc, sbrc, mc, 1);
+	creatureList->push_back(mutated);
 }

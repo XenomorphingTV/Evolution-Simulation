@@ -74,8 +74,20 @@ void simulationV2(std::vector<Creature> *allCreatures, int time) {
 	std::remove("GraphPlots.csv");
 
 	bool tableHeader = false;
-
 	saveCoordsV2(0, &tableHeader, (allCreatures->size() - 1), allCreatures);
+	for (int currentTime = 1; currentTime <= time; currentTime++) {
+		for (int creatureIndex = 0; creatureIndex <= (allCreatures->size() - 1); creatureIndex++) {
+			// Add spontaneous birth rate too population
+			allCreatures->at(creatureIndex).population = allCreatures->at(creatureIndex).population + allCreatures->at(creatureIndex).getSpontaneousBirthRate();
+			int tempPop = allCreatures->at(creatureIndex).population;
+			deathChanceCalulator(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
+			replicationChanceCalulator(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
+			allCreatures->at(creatureIndex).mutateCreature(allCreatures);
+
+			allCreatures->at(creatureIndex).population = (allCreatures->at(creatureIndex).population < 0) ? 0 : (allCreatures->at(creatureIndex).population);
+		}
+		saveCoordsV2(currentTime, &tableHeader, (allCreatures->size() - 1), allCreatures);
+	}
 	tableHeader = true;
 	saveCoordsV2(time, &tableHeader, (allCreatures->size() - 1), allCreatures);
 }
@@ -117,8 +129,9 @@ void saveCoordsV2(int time, bool *header, int size, std::vector<Creature>* allCr
 		{
 			// If "Header" placeholder is found, replace it with population and then number of total species
 			if (strTemp == "Header") {
+				replace += "Time";
 				for (int i = 0; i <= size; i++) {
-					replace += "Time,Population " + std::to_string(i) + ",";
+					replace += ",Population " + std::to_string(i);
 				}
 				replace += "\n";
 				fileOut << replace;
@@ -126,7 +139,7 @@ void saveCoordsV2(int time, bool *header, int size, std::vector<Creature>* allCr
 
 			// The rest is just coppied
 			else {
-				fileOut << strTemp;
+				fileOut << strTemp << std::endl;
 			}
 		}
 
@@ -142,9 +155,10 @@ void saveCoordsV2(int time, bool *header, int size, std::vector<Creature>* allCr
 	// If its not yet time to add headers, just save the data
 	else {
 		myFile.open("GraphPlotsNoHeader.csv", std::ios_base::app);
+		myFile << time;
 		for (int i = 0; i <= size; i++) {
-			myFile << time << "," << (allCreatures->at(i)).population << ",";
+			myFile << "," << (allCreatures->at(i)).population;
 		}
-		myFile << "\n";
+		myFile << std::endl;
 	}
 }

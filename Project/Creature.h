@@ -24,5 +24,6 @@ public:
 	bool randomPercentCheck(double percentage);
 	double maxMutateDouble(double fMin, double fMax);
 	void mutateCreature(std::vector<Creature> *creatureList);
-	double pushNewMutation(double chance);
+	double mutationPosOrNeg(double chance, double minMut, double maxMut);
+	void pushMutate(std::vector<Creature>* creatureList, int valueToChange);
 };
