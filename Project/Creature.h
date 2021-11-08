@@ -21,6 +21,7 @@ public:
 	double getReplicationChance();
 	double getDeathChance();
 	double getSpontaneousBirthRateChance();
+	double getMutateChance();
 	bool randomPercentCheck(double percentage);
 	double maxMutateDouble(double fMin, double fMax);
 	void mutateCreature(std::vector<Creature> *creatureList);

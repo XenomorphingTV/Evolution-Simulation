@@ -33,6 +33,10 @@ double Creature::getDeathChance() {
 	return deathChance;
 }
 
+double Creature::getMutateChance() {
+	return mutationChance;
+}
+
 // Random result based on percentage chance
 bool Creature::randomPercentCheck(double percentage) {
 	static const std::uniform_real_distribution<double> dist(0, 1);
@@ -46,7 +50,7 @@ double Creature::maxMutateDouble(double fMin, double fMax){
 }
 
 void Creature::mutateCreature(std::vector<Creature> *creatureList){
-	if (randomPercentCheck(mutationChance)) {
+	if (randomPercentCheck(mutationChance) && population != 0) {
 		// Use this to randomize which value to change
 		int temp{ rand() % 3 };
 		pushMutate(creatureList, temp);
@@ -107,6 +111,8 @@ void Creature::pushMutate(std::vector<Creature>* creatureList, int valueToChange
 		break;*/
 	}
 
-	Creature mutated(spontaneousBirthRate, rc, dc, sbrc, mc, 1);
-	creatureList->push_back(mutated);
+	if (!(replicationChance == rc && deathChance == dc && spontaneousBirthRateChance == sbrc && mutationChance == mc)) {
+		Creature mutated(spontaneousBirthRate, rc, dc, sbrc, mc, 10);
+		creatureList->push_back(mutated);
+	}
 }

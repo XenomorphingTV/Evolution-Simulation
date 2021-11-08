@@ -12,3 +12,4 @@ void saveCoords(int time, int* population);
 
 void simulationV2(std::vector<Creature>* allCreatures, int time);
 void saveCoordsV2(int time, bool* header, int size, std::vector<Creature>* allCreatures);
+void deathChanceCalulatorv2(int* population, Creature model, int tempPop, int totalPop);

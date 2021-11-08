@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <string>
+#include <thread>
 
 void basicSimulation(Creature model, int *population, int time) {
 	// Remove previously created file, becuase we always append to it
@@ -36,7 +37,9 @@ void basicSimulation(Creature model, int *population, int time) {
 void deathChanceCalulator(int *population, Creature model, int tempPop) {
 	// Check how many creatures die in the population, edit the population directly to cut down on execution speed
 	for (int i = 0; i <= tempPop; i++) {
-		if (model.randomPercentCheck(model.getDeathChance())) {
+
+		// Added a crowding coefficient to make the population balance out depending on the population
+		if (model.randomPercentCheck(model.getDeathChance() + (0.001 * model.population))) {
 			--(*population);
 		}
 	}
@@ -46,7 +49,7 @@ void deathChanceCalulator(int *population, Creature model, int tempPop) {
 void replicationChanceCalulator(int *population, Creature model, int tempPop) {
 	// Same as deathChanceCalculator, do maths on the population
 	for (int i = 0; i <= tempPop; i++) {
-		if (model.randomPercentCheck(model.getReplicationChance())) {
+		if (model.randomPercentCheck(model.getReplicationChance()) && *population != 0) {
 			++(*population);
 		}
 	}
@@ -73,16 +76,34 @@ void saveCoords(int time, int* population) {
 void simulationV2(std::vector<Creature> *allCreatures, int time) {
 	std::remove("GraphPlots.csv");
 
+	// Set a header flag. We use this to tell saveCoordsV2 that we need to replace temp header with all population names
 	bool tableHeader = false;
+	// Save population at time = 0
 	saveCoordsV2(0, &tableHeader, (allCreatures->size() - 1), allCreatures);
+	int totalPop;
+
+	// Itterate through time
 	for (int currentTime = 1; currentTime <= time; currentTime++) {
+
+		// Reset total pop so we can recalculate it
+		totalPop = 0;
+		for (int creatureIndex = 0; creatureIndex <= (allCreatures->size() - 1); creatureIndex++) {
+			totalPop += allCreatures->at(creatureIndex).population;
+		}
+
+		// Here we itterate through our vector, applying the same calculations to all our populations
 		for (int creatureIndex = 0; creatureIndex <= (allCreatures->size() - 1); creatureIndex++) {
 			// Add spontaneous birth rate too population
 			allCreatures->at(creatureIndex).population = allCreatures->at(creatureIndex).population + allCreatures->at(creatureIndex).getSpontaneousBirthRate();
 			int tempPop = allCreatures->at(creatureIndex).population;
-			deathChanceCalulator(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
 			replicationChanceCalulator(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
+			// std::thread thread1(replicationChanceCalulator, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
+			deathChanceCalulatorv2(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop, totalPop);
+			// std::thread thread2(deathChanceCalulatorv2, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop, totalPop);
 			allCreatures->at(creatureIndex).mutateCreature(allCreatures);
+
+			// thread1.join();
+			// thread2.join();
 
 			allCreatures->at(creatureIndex).population = (allCreatures->at(creatureIndex).population < 0) ? 0 : (allCreatures->at(creatureIndex).population);
 		}
@@ -161,4 +182,18 @@ void saveCoordsV2(int time, bool *header, int size, std::vector<Creature>* allCr
 		}
 		myFile << std::endl;
 	}
+}
+
+
+// Remade the deathChance calculator to include the crowding coefficient for the entire pop
+void deathChanceCalulatorv2(int* population, Creature model, int tempPop, int totalPop) {
+	// Check how many creatures die in the population, edit the population directly to cut down on execution speed
+	for (int i = 0; i <= tempPop; i++) {
+
+		// Added a crowding coefficient to make the population balance out depending on the population
+		if (model.randomPercentCheck(model.getDeathChance() + (0.001 * totalPop))) {
+			--(*population);
+		}
+	}
+
 }
