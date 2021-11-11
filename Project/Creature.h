@@ -1,4 +1,6 @@
 #pragma once
+#include <ctime>
+#include <random>
 #include <vector>
 
 // Max and min value that the mutation can do

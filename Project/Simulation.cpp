@@ -1,10 +1,4 @@
 #include "Simulation.h"
-#include <iostream>
-#include <fstream>
-#include <stdlib.h>
-#include <vector>
-#include <string>
-#include <thread>
 
 void basicSimulation(Creature model, int *population, int time) {
 	// Remove previously created file, becuase we always append to it
@@ -96,10 +90,14 @@ void simulationV2(std::vector<Creature> *allCreatures, int time) {
 			// Add spontaneous birth rate too population
 			allCreatures->at(creatureIndex).population = allCreatures->at(creatureIndex).population + allCreatures->at(creatureIndex).getSpontaneousBirthRate();
 			int tempPop = allCreatures->at(creatureIndex).population;
-			replicationChanceCalulator(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
+
+			// Attempted using threads here, seemed to slow the program down rather than speeding it up, I guess I had to join it too often to make use of the multi thread
 			// std::thread thread1(replicationChanceCalulator, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
-			deathChanceCalulatorv2(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop, totalPop);
 			// std::thread thread2(deathChanceCalulatorv2, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop, totalPop);
+
+			replicationChanceCalulator(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
+			deathChanceCalulatorv2(&(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop, totalPop);
+			
 			allCreatures->at(creatureIndex).mutateCreature(allCreatures);
 
 			// thread1.join();
@@ -196,4 +194,62 @@ void deathChanceCalulatorv2(int* population, Creature model, int tempPop, int to
 		}
 	}
 
+}
+
+
+//-------------------------//
+//Start of third simulation//
+//-------------------------//
+
+void simulationV3(std::vector<Creature>* allCreatures, int time, int food) {
+	std::remove("GraphPlots.csv");
+
+	// Set a header flag. We use this to tell saveCoordsV2 that we need to replace temp header with all population names
+	bool tableHeader = false;
+	// Save population at time = 0
+	saveCoordsV2(0, &tableHeader, (allCreatures->size() - 1), allCreatures);
+
+	// Itterate through time
+	for (int currentTime = 1; currentTime <= time; currentTime++) {
+
+		int tempFood{ food };
+
+		// Here we itterate through our vector, applying the same calculations to all our populations
+		for (int creatureIndex = 0; creatureIndex <= (allCreatures->size() - 1); creatureIndex++) {
+			// Add spontaneous birth rate too population
+			allCreatures->at(creatureIndex).population = allCreatures->at(creatureIndex).population + allCreatures->at(creatureIndex).getSpontaneousBirthRate();
+			int tempPop = allCreatures->at(creatureIndex).population;
+
+			// Attempted using threads here, seemed to slow the program down rather than speeding it up, I guess I had to join it too often to make use of the multi thread
+			// std::thread thread1(replicationChanceCalulator, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
+			// std::thread thread2(deathChanceCalulatorv2, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop, totalPop);
+
+			foodReplicationAndDeath(&(allCreatures->at(creatureIndex).population), tempPop, &tempFood);
+
+			allCreatures->at(creatureIndex).mutateCreature(allCreatures);
+
+			// thread1.join();
+			// thread2.join();
+
+			allCreatures->at(creatureIndex).population = (allCreatures->at(creatureIndex).population < 0) ? 0 : (allCreatures->at(creatureIndex).population);
+		}
+		saveCoordsV2(currentTime, &tableHeader, (allCreatures->size() - 1), allCreatures);
+	}
+	tableHeader = true;
+	saveCoordsV2(time, &tableHeader, (allCreatures->size() - 1), allCreatures);
+}
+
+
+void foodReplicationAndDeath(int* population, int tempPop, int *totalFood) {
+	// Same as deathChanceCalculator, do maths on the population
+	for (int i = 0; i <= tempPop; i++) {
+		int foodEaten{ willCreatureEat(calculateChanceOfFood(*totalFood, tempPop)) };
+		if (foodEaten == 2) {
+			++(*population);
+		}
+		else if (foodEaten == 0) {
+			--(*population);
+		}
+		*totalFood -= foodEaten;
+	}
 }

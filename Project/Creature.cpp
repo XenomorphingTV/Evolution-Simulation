@@ -1,7 +1,5 @@
 #include "Creature.h"
-#include <ctime>
-#include <random>
-#include <vector>
+
 //Constructor
 
 std::mt19937 rng(std::time(NULL));

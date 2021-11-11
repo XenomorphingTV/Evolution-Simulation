@@ -1,0 +1,7 @@
+Creature 0
+Spontaneous Birth Rate = 0
+Replication Chance = 0.5
+Death Chance = 0.05
+Spontaneous Birth Rate Chance = 0
+Mutation Chance = 0.001
+

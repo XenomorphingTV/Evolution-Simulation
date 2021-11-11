@@ -1,5 +1,6 @@
 #include "Creature.h"
 #include "Simulation.h"
+#include "Environment.h"
 #include <iostream>
 #include <random>
 #include <time.h>
@@ -30,13 +31,15 @@ int main()
 
 	// Create a random seed for our randomization
 	srand(std::time(NULL));
-	int time{ 1000 };
+	int time{ 100 };
 	std::vector<Creature> allCreatures;
 	Creature model1(0, 0.5, 0.05, 0, 0.001, 10);
 	allCreatures.push_back(model1);
+	int food{ 100 };
 
-	//basicSimulation(model1, &population, time);
-	simulationV2(&allCreatures, time);
+	// basicSimulation(model1, &population, time);
+	// simulationV2(&allCreatures, time);
+	simulationV3(&allCreatures, time, food);
 	saveCreatureData(&allCreatures);
 	printf("Time taken: %.2fs\n", (double)(clock() - (uint16_t)tStart) / CLOCKS_PER_SEC);
 
