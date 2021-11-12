@@ -208,11 +208,17 @@ void simulationV3(std::vector<Creature>* allCreatures, int time, int food) {
 	bool tableHeader = false;
 	// Save population at time = 0
 	saveCoordsV2(0, &tableHeader, (allCreatures->size() - 1), allCreatures);
+	int totalPop;
 
 	// Itterate through time
 	for (int currentTime = 1; currentTime <= time; currentTime++) {
 
 		int tempFood{ food };
+
+		totalPop = 0;
+		for (int creatureIndex = 0; creatureIndex <= (allCreatures->size() - 1); creatureIndex++) {
+			totalPop += allCreatures->at(creatureIndex).population;
+		}
 
 		// Here we itterate through our vector, applying the same calculations to all our populations
 		for (int creatureIndex = 0; creatureIndex <= (allCreatures->size() - 1); creatureIndex++) {
@@ -224,7 +230,7 @@ void simulationV3(std::vector<Creature>* allCreatures, int time, int food) {
 			// std::thread thread1(replicationChanceCalulator, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop);
 			// std::thread thread2(deathChanceCalulatorv2, &(allCreatures->at(creatureIndex).population), allCreatures->at(creatureIndex), tempPop, totalPop);
 
-			foodReplicationAndDeath(&(allCreatures->at(creatureIndex).population), tempPop, &tempFood);
+			foodReplicationAndDeath(&(allCreatures->at(creatureIndex).population), tempPop, &tempFood, totalPop);
 
 			allCreatures->at(creatureIndex).mutateCreature(allCreatures);
 
@@ -240,10 +246,10 @@ void simulationV3(std::vector<Creature>* allCreatures, int time, int food) {
 }
 
 
-void foodReplicationAndDeath(int* population, int tempPop, int *totalFood) {
+void foodReplicationAndDeath(int* population, int tempPop, int *totalFood, int totalPop) {
 	// Same as deathChanceCalculator, do maths on the population
 	for (int i = 0; i <= tempPop; i++) {
-		int foodEaten{ willCreatureEat(calculateChanceOfFood(*totalFood, tempPop)) };
+		int foodEaten{ willCreatureEat(calculateChanceOfFood(*totalFood, totalPop)) };
 		if (foodEaten == 2) {
 			++(*population);
 		}

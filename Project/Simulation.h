@@ -21,4 +21,4 @@ void saveCoordsV2(int time, bool* header, int size, std::vector<Creature>* allCr
 void deathChanceCalulatorv2(int* population, Creature model, int tempPop, int totalPop);
 
 void simulationV3(std::vector<Creature>* allCreatures, int time, int food);
-void foodReplicationAndDeath(int* population, int tempPop, int* totalFood);
+void foodReplicationAndDeath(int* population, int tempPop, int* totalFood, int totalPop);

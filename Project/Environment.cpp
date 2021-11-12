@@ -6,14 +6,14 @@ std::mt19937 rng2(std::time(NULL));
 double calculateChanceOfFood(int totalFood, int totalPopNotEaten) {
 	double chance((double)totalFood / (double)totalPopNotEaten);
 	// return (((double)totalFood / (double)totalPopNotEaten <= 1) ? (double)totalFood / (double)totalPopNotEaten : 1);
-	if (chance - 0.2 < 0) {
+	if (chance - 0.3 < 0) {
 		return 0;
 	}
-	else if (chance - 0.2 > 1){
-		return 1;
+	else if (chance - 0.3 > 1){
+		return 0.7;
 	}
 	else {
-		return (chance - 0.2);
+		return (chance - 0.3);
 	}
 }
 

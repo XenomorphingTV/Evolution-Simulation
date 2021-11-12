@@ -31,11 +31,11 @@ int main()
 
 	// Create a random seed for our randomization
 	srand(std::time(NULL));
-	int time{ 100 };
+	int time{ 1000 };
 	std::vector<Creature> allCreatures;
 	Creature model1(0, 0.5, 0.05, 0, 0.001, 10);
 	allCreatures.push_back(model1);
-	int food{ 100 };
+	int food{ 1000 };
 
 	// basicSimulation(model1, &population, time);
 	// simulationV2(&allCreatures, time);
