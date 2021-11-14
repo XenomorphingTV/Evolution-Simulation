@@ -54,32 +54,33 @@ void creatureMenu(std::vector<CreatureV2>* creatureList) {
 			std::cout << "Enter the distance in grids, how far it can detect food: ";
 			std::cin >> detectionRange;
 			if (std::cin.fail()) {
-				throw "\nError Input";
+				throw "Error Input";
 			}
 
 			std::cout << "Enter the speed the creature can move, deciding the order of who moves first: ";
 			std::cin >> speed;
 			if (std::cin.fail()) {
-				throw "\nError Input";
+				throw "Error Input";
+				std::cin.clear();
 			}
 
 			std::cout << "How big is the population of this creature: ";
 			std::cin >> population;
 			if (std::cin.fail()) {
-				throw "\nError Input";
+				throw "Error Input";
 			}
 
 			std::cout << "Is this the creature you want to input? (y/n): ";
 			std::cin >> yesOrNo;
 			if (std::cin.fail()) {
-				throw "\nError Input";
+				throw "Error Input";
 			}
 			if (yesOrNo == 'n') {
 				clearScreen();
 				continue;
 			}
 			else if(yesOrNo != 'n' && yesOrNo != 'y') {
-				throw "\nPlease input y or n.";
+				throw "Please input y or n.";
 			}
 			
 			CreatureV2 userCreature(detectionRange, speed, creatureChar);
@@ -88,10 +89,10 @@ void creatureMenu(std::vector<CreatureV2>* creatureList) {
 			std::cout << "Do you want to make more creatures?\nIts recomended that you keep the amount low due to the time it would take to complete the simulation.\n(y/n): ";
 			std::cin >> yesOrNo;
 			if (std::cin.fail()) {
-				throw "\nError Input";
+				throw "Error Input";
 			}
 			else if (yesOrNo != 'n' && yesOrNo != 'y') {
-				throw "\nPlease input y or n.";
+				throw "Please input y or n.";
 			}
 
 			if (yesOrNo == 'n') {
@@ -110,8 +111,12 @@ void creatureMenu(std::vector<CreatureV2>* creatureList) {
 				clearScreen();
 			}
 		}
-		catch (char* error){
-			std::cout << error << "\n";
+		catch (const char* error){
+			clearScreen();
+			std::cout << error << "\n\n";
+			std::cin.clear();
+			std::cin.ignore();
+			continue;
 		}
 
 	}
