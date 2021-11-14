@@ -1,5 +1,16 @@
 #include "Simulation.h"
 
+
+void simulationV4() {
+
+}
+
+
+/* Starting on new simulation method, it is using a new method so I can't reuse any of the old ones
+
+
+
+
 void basicSimulation(Creature model, int *population, int time) {
 	// Remove previously created file, becuase we always append to it
 	std::remove("GraphPlots.csv");
@@ -259,3 +270,4 @@ void foodReplicationAndDeath(int* population, int tempPop, int *totalFood, int t
 		*totalFood -= foodEaten;
 	}
 }
+*/

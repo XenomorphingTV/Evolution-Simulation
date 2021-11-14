@@ -8,6 +8,8 @@
 #include <string>
 #include <thread>
 
+
+/*
 void basicSimulation(Creature model, int* population, int time);
 void deathChanceCalulator(int* population, Creature model, int tempPop);
 
@@ -22,3 +24,4 @@ void deathChanceCalulatorv2(int* population, Creature model, int tempPop, int to
 
 void simulationV3(std::vector<Creature>* allCreatures, int time, int food);
 void foodReplicationAndDeath(int* population, int tempPop, int* totalFood, int totalPop);
+*/

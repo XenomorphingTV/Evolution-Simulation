@@ -144,14 +144,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Creature.cpp" />
+    <ClCompile Include="CreatureV2.cpp" />
     <ClCompile Include="Environment.cpp" />
     <ClCompile Include="Project.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="Menu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Creature.h" />
+    <ClInclude Include="CreatureV2.h" />
     <ClInclude Include="Environment.h" />
     <ClInclude Include="gnuplot-iostream.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Simulation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

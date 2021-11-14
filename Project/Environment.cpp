@@ -31,3 +31,29 @@ int willCreatureEat(double chanceToFindFood) {
 
 	return foodEaten;
 }
+
+std::vector<std::vector<char>> makeBoard(int length) {
+
+	std::vector<std::vector<char>> envBoard;
+
+	envBoard.resize(length, std::vector<char>(length, ' '));
+
+	return envBoard;
+}
+
+void placeFoodOnBoard(std::vector<std::vector<char>> *board, int totalFood) {
+	int x;
+	int y;
+	int free{ false };
+	for (int i = 0; i <= totalFood; i++) {
+		do {
+			free = false;
+			x = (rand() % board->size()) + 1;
+			y = (rand() % board->size()) + 1;
+			if ((*board)[y][x] == ' ') {
+				(*board)[y][x] == '*';
+				free = true;
+			}
+		} while (free != true);
+	}
+}
